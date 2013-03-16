@@ -46,7 +46,7 @@ class WhoReplied_Listener
         	if ($thread['reply_count'] > 0) {
 				$link = XenForo_Link::buildPublicLink('threads/whoreplied', $thread);
             	$replace = "<a href='".$link."' title='" . $phrase . "' class='OverlayTrigger' data-href='". $link ."'>$3</a>";
-            	$pattern = '/(<li id="thread-'. $thread['thread_id'] .'" class="(?:[^"]*?)" data-author="(?:[^"]*?)"[^>]*>(.*?)<dl class="major"><dt>[a-zA-Z0-9:.,?!@]*<\/dt> <dd>)([0-9,]*)(<\/dd><\/dl>)/s';
+            	$pattern = '/(<li id="thread-'. $thread['thread_id'] .'" class="(?:[^"]*?)" data-author="(?:[^"]*?)"[^>]*>(.*?)<dl class="major"><dt>.*?<\/dt> <dd>)([0-9,]*)(<\/dd><\/dl>)/s';
             	$contents = preg_replace($pattern, '$1' . $replace . '$4', $contents);
         	}
         }
