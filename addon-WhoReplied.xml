@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="WhoReplied" title="Who Replied" version_string="1.0.0" version_id="1" url="" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+  <admin_navigation/>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates/>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="WhoReplied_Listener" callback_method="extend" active="1" description=""/>
+    <listener event_id="template_hook" execute_order="10" callback_class="WhoReplied_Listener" callback_method="template_hook" active="1" description=""/>
+    <listener event_id="template_post_render" execute_order="10" callback_class="WhoReplied_Listener" callback_method="template_post_render" active="1" description=""/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <optiongroups/>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="whoreplied_members_who_replied" version_id="1" version_string="1.0.0"><![CDATA[Members Who Replied this thread]]></phrase>
+    <phrase title="whoreplied_whoreplied" version_id="1" version_string="1.0.0"><![CDATA[Who Replied?]]></phrase>
+  </phrases>
+  <route_prefixes/>
+  <style_properties/>
+  <templates>
+    <template title="whoreplied.css" version_id="1" version_string="1.0.0"><![CDATA[.whoreplied_postcount {
+    font-size: 30px;
+}]]></template>
+    <template title="whoreplied_list" version_id="1" version_string="1.0.0"><![CDATA[<xen:title>{xen:helper threadPrefix, $thread, escaped}{$thread.title} - {xen:phrase whoreplied_members_who_replied}</xen:title>
+<xen:h1>{xen:phrase whoreplied_members_who_replied}</xen:h1>
+
+<xen:container var="$head.noindex">
+	<meta name="robots" content="noindex" />
+</xen:container>
+
+<xen:navigation>
+	<xen:breadcrumb source="$nodeBreadCrumbs" />
+	<xen:breadcrumb href="{xen:link full:posts, $post}">{xen:helper threadPrefix, $thread}{$thread.title}</xen:breadcrumb>
+</xen:navigation>
+
+<xen:require css="whoreplied.css" />
+
+<div class="section">
+	<dl class="subHeading pairsInline"><dt>{xen:phrase thread}:</dt> <dd><a href="{xen:link posts, $post}">{xen:helper threadPrefix, $thread}{$thread.title}</a></dd></dl>
+	<ol class="overlayScroll">
+        <xen:foreach loop="$users" value="$user">
+		<xen:include template="member_list_item">
+        	<xen:set var="$extraTemplate">
+        		<div class="whoreplied_postcount">
+        			{$user.post_count}
+    			</div>
+    		</xen:set>
+        </xen:include>
+        </xen:foreach>
+	</ol>
+	<div class="sectionFooter overlayOnly"><a class="button primary OverlayCloser">{xen:phrase close}</a></div>
+</div>]]></template>
+  </templates>
+  <bb_code_media_sites/>
+</addon>
