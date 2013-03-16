@@ -1,4 +1,4 @@
-# [Who Replied]() - Show the users who replied to a specific thread
+# [Who Replied](http://xenforo.com/community/resources/who-replied.1537/) - Show the users who replied to a specific thread
 
 This is an addon for the forum software [XenForo](http://www.xenforo.com).
 
