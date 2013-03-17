@@ -17,6 +17,11 @@ class WhoReplied_Listener
 		{
 			$content = WhoReplied_Listener::searchAndReplaceReplyLink('RecentThreads', $template, $content);
 		}
+
+		 if ($templateName == 'find_new_threads')
+		 {
+		 	$content = WhoReplied_Listener::searchAndReplaceReplyLink('threads', $template, $content);
+		 }
 	}
 
 	public static function extend($class, array &$extend)

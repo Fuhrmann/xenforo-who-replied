@@ -32,6 +32,10 @@ If you want to customize the number of posts of each number you can add this to 
 
 (this will decrease the font-size, but you can customize any way you want)
 
+## 1.1.0
+- Added a link to show all the posts from a user within the thread
+- Added the same behavior of the forum thread list to the 'What's new' section
+
 ## 1.0.1
 - Fixed regex problem with arabic characters
 
