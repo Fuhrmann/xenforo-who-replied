@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="WhoReplied" title="Who Replied" version_string="1.1.0" version_id="3" url="http://xenforo.com/community/resources/who-replied.1537/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="WhoReplied" title="Who Replied" version_string="1.2.0" version_id="4" url="http://xenforo.com/community/resources/who-replied.1537/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
   <admin_templates/>
+  <admin_template_modifications/>
   <code_events/>
   <code_event_listeners>
-    <listener event_id="load_class_controller" execute_order="10" callback_class="WhoReplied_Listener" callback_method="extend" active="1" description=""/>
-    <listener event_id="template_hook" execute_order="10" callback_class="WhoReplied_Listener" callback_method="template_hook" active="1" description=""/>
-    <listener event_id="template_post_render" execute_order="10" callback_class="WhoReplied_Listener" callback_method="template_post_render" active="1" description=""/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="WhoReplied_Listener" callback_method="extendControllerPublicThread" active="1" hint="XenForo_ControllerPublic_Thread" description=""/>
+    <listener event_id="template_hook" execute_order="10" callback_class="WhoReplied_Listener" callback_method="templateHookListThreads" active="1" hint="thread_list_threads" description=""/>
+    <listener event_id="template_hook" execute_order="10" callback_class="WhoReplied_Listener" callback_method="templateHookListStickies" active="1" hint="thread_list_stickies" description=""/>
+    <listener event_id="template_post_render" execute_order="10" callback_class="WhoReplied_Listener" callback_method="templatePostRenderEWRBlock" active="1" hint="EWRblock_RecentThreads" description=""/>
+    <listener event_id="template_post_render" execute_order="10" callback_class="WhoReplied_Listener" callback_method="templatePostRenderFindNewPosts" active="1" hint="find_new_posts" description=""/>
   </code_event_listeners>
   <cron/>
   <email_templates/>
+  <email_template_modifications/>
   <optiongroups/>
   <permissions>
     <permission_groups/>
-    <permissions/>
+    <permissions>
+      <permission permission_group_id="forum" permission_id="whoRepliedView" permission_type="flag" default_value="unset" interface_group_id="forumPermissions" display_order="1000"/>
+    </permissions>
     <interface_groups/>
   </permissions>
   <phrases>
+    <phrase title="permission_forum_whoRepliedView" version_id="3" version_string="1.1.0"><![CDATA[View Who Replied]]></phrase>
     <phrase title="whoreplied_members_who_replied" version_id="1" version_string="1.0.0"><![CDATA[Members Who Replied this thread]]></phrase>
     <phrase title="whoreplied_see_posts" version_id="3" version_string="1.1.0"><![CDATA[See all posts from this user in this thread]]></phrase>
-    <phrase title="whoreplied_whoreplied" version_id="1" version_string="1.0.0"><![CDATA[Who Replied?]]></phrase>
+    <phrase title="whoreplied_whoreplied" global_cache="1" version_id="1" version_string="1.0.0"><![CDATA[Who Replied?]]></phrase>
   </phrases>
   <route_prefixes/>
   <style_properties/>
@@ -61,5 +68,6 @@
 	<div class="sectionFooter overlayOnly"><a class="button primary OverlayCloser">{xen:phrase close}</a></div>
 </div>]]></template>
   </templates>
+  <public_template_modifications/>
   <bb_code_media_sites/>
 </addon>

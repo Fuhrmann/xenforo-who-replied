@@ -10,6 +10,10 @@ When clicking:
 
 ![default behavior](default.png)
 
+Permission per forum:
+
+![permission per forum](default2.png)
+
 It was developed based on this [thread](http://xenforo.com/community/threads/view-all-the-users-who-replied-to-a-thread.46076/).
 
 ### Installation
@@ -31,6 +35,11 @@ If you want to customize the number of posts of each number you can add this to 
 ```
 
 (this will decrease the font-size, but you can customize any way you want)
+
+## 1.2.0
+- Added a new permission under the Forum Permission Group: "View Who Replied:", this permission works per forum node
+- Make use of Event Hints on Code Event listener to increase performance
+- Changed template post render "find_new_threads" to "find_new_posts"
 
 ## 1.1.0
 - Added a link to show all the posts from a user within the thread
