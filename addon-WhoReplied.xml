@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="WhoReplied" title="Who Replied" version_string="1.2.0" version_id="4" url="http://xenforo.com/community/resources/who-replied.1537/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="WhoReplied" title="Who Replied" version_string="1.3.0" version_id="5" url="http://xenforo.com/community/resources/who-replied.1537/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -7,11 +7,7 @@
   <admin_template_modifications/>
   <code_events/>
   <code_event_listeners>
-    <listener event_id="load_class_controller" execute_order="10" callback_class="WhoReplied_Listener" callback_method="extendControllerPublicThread" active="1" hint="XenForo_ControllerPublic_Thread" description=""/>
-    <listener event_id="template_hook" execute_order="10" callback_class="WhoReplied_Listener" callback_method="templateHookListThreads" active="1" hint="thread_list_threads" description=""/>
-    <listener event_id="template_hook" execute_order="10" callback_class="WhoReplied_Listener" callback_method="templateHookListStickies" active="1" hint="thread_list_stickies" description=""/>
-    <listener event_id="template_post_render" execute_order="10" callback_class="WhoReplied_Listener" callback_method="templatePostRenderEWRBlock" active="1" hint="EWRblock_RecentThreads" description=""/>
-    <listener event_id="template_post_render" execute_order="10" callback_class="WhoReplied_Listener" callback_method="templatePostRenderFindNewPosts" active="1" hint="find_new_posts" description=""/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="WhoReplied_Listener" callback_method="loadController" active="1" hint="XenForo_ControllerPublic_Thread" description=""/>
   </code_event_listeners>
   <cron/>
   <email_templates/>
@@ -36,7 +32,7 @@
     <template title="whoreplied.css" version_id="1" version_string="1.0.0"><![CDATA[.whoreplied_postcount {
     font-size: 30px;
 }]]></template>
-    <template title="whoreplied_list" version_id="3" version_string="1.1.0"><![CDATA[<xen:title>{xen:helper threadPrefix, $thread, escaped}{$thread.title} - {xen:phrase whoreplied_members_who_replied}</xen:title>
+    <template title="whoreplied_list" version_id="5" version_string="1.3.0"><![CDATA[<xen:title>{xen:helper threadPrefix, $thread, escaped}{$thread.title} - {xen:phrase whoreplied_members_who_replied}</xen:title>
 <xen:h1>{xen:phrase whoreplied_members_who_replied}</xen:h1>
 
 <xen:container var="$head.noindex">
@@ -45,13 +41,13 @@
 
 <xen:navigation>
 	<xen:breadcrumb source="$nodeBreadCrumbs" />
-	<xen:breadcrumb href="{xen:link full:posts, $post}">{xen:helper threadPrefix, $thread}{$thread.title}</xen:breadcrumb>
+	<xen:breadcrumb href="{xen:link threads, $thread}">{xen:helper threadPrefix, $thread}{$thread.title}</xen:breadcrumb>
 </xen:navigation>
 
 <xen:require css="whoreplied.css" />
 
 <div class="section">
-	<dl class="subHeading pairsInline"><dt>{xen:phrase thread}:</dt> <dd><a href="{xen:link posts, $post}">{xen:helper threadPrefix, $thread}{$thread.title}</a></dd></dl>
+	<dl class="subHeading pairsInline"><dt>{xen:phrase thread}:</dt> <dd><a href="{xen:link threads, $thread}">{xen:helper threadPrefix, $thread}{$thread.title}</a></dd></dl>
 	<ol class="overlayScroll">
         <xen:foreach loop="$users" value="$user">
 		<xen:include template="member_list_item">
@@ -68,6 +64,20 @@
 	<div class="sectionFooter overlayOnly"><a class="button primary OverlayCloser">{xen:phrase close}</a></div>
 </div>]]></template>
   </templates>
-  <public_template_modifications/>
+  <public_template_modifications>
+    <modification template="thread_list_item" modification_key="WhoReplied_thread_list_item" description="" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[{xen:if $thread.isRedirect, '&ndash;', {xen:number $thread.reply_count}}]]></find>
+      <replace><![CDATA[<xen:if is="{$thread.isRedirect}">
+&ndash;
+<xen:else />
+<xen:if is="{$thread.reply_count} > 0">
+<a href="{xen:link threads/whoreplied, $thread}" title="{xen:phrase whoreplied_whoreplied}">{xen:number $thread.reply_count}</a>
+<xen:else />
+{$thread.reply_count}
+</xen:if>
+</xen:if>]]></replace>
+    </modification>
+  </public_template_modifications>
   <bb_code_media_sites/>
+  <bb_codes/>
 </addon>
