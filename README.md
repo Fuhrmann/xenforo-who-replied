@@ -36,9 +36,13 @@ If you want to customize the number of posts of each number you can add this to 
 
 (this will decrease the font-size, but you can customize any way you want)
 
+## 1.3.0a
+- Put permission support back in.
+- Add forum to the breadcrumb.
+
 ## 1.3.0
 - Migrated from template hooks and post processing to Template Modification System. Catches watched threads, new posts views for free.
--  Fixed links back to thread from the Who Replied Page.
+- Fixed links back to thread from the Who Replied Page.
 
 ## 1.2.0
 - Added a new permission under the Forum Permission Group: "View Who Replied:", this permission works per forum node
