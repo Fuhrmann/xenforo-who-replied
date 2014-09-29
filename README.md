@@ -36,6 +36,9 @@ If you want to customize the number of posts of each number you can add this to 
 
 (this will decrease the font-size, but you can customize any way you want)
 
+## 1.3.0b
+- Put overlay support back in.
+
 ## 1.3.0a
 - Put permission support back in.
 - Add forum to the breadcrumb.
