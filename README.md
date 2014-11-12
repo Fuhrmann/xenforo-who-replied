@@ -1,6 +1,6 @@
-# [Who Replied](http://xenforo.com/community/resources/who-replied.1537/) - Show the users who replied to a specific thread
+# [Who Replied](http://xenforo.com/community/resources/who-replied.1537/)  <img align="left" src="logo.png" width="40" height="40" />
 
-This is an addon for the forum software [XenForo](http://www.xenforo.com).
+This is an addon for the forum software [XenForo](http://www.xenforo.com). Compatible versions: 1.3, 1.4
 
 It will add a link to the replies number on the thread list template:
 
