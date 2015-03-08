@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="WhoReplied" title="Who Replied" version_string="1.4.0" version_id="8" url="http://xenforo.com/community/resources/who-replied.1537/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="WhoReplied" title="Who Replied" version_string="1.4.1" version_id="9" url="http://xenforo.com/community/resources/who-replied.1537/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -77,6 +77,14 @@
 {$thread.reply_count}
 </xen:if>
 </xen:if>]]></replace>
+    </modification>
+    <modification template="thread_view" modification_key="WhoReplied_thread_view" description="" execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#(\s*?)(<xen:hook name="thread_view_tools_links")#i]]></find>
+      <replace><![CDATA[$1
+<xen:if is="{$visitor.permissions.forum.whoRepliedView} and {$thread.reply_count} > 0">
+    <a href="{xen:link threads/whoreplied, $thread}" title="{xen:phrase whoreplied_whoreplied}" class='OverlayTrigger' data-href="{xen:link threads/whoreplied, $thread}">{xen:phrase whoreplied_whoreplied}</a>
+</xen:if>
+$1$2]]></replace>
     </modification>
   </public_template_modifications>
   <bb_code_media_sites/>
