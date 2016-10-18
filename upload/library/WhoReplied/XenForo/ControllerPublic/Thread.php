@@ -1,5 +1,6 @@
 <?php
-class WhoReplied_Extend_ControllerPublic_Thread extends XFCP_WhoReplied_Extend_ControllerPublic_Thread
+
+class WhoReplied_XenForo_ControllerPublic_Thread extends XFCP_WhoReplied_XenForo_ControllerPublic_Thread
 {
 
     public function actionWhoreplied()
