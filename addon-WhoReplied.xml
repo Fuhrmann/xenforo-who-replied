@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="WhoReplied" title="Who Replied" version_string="1.5.0" version_id="1050000" url="http://xenforo.com/community/resources/who-replied.1537/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="WhoReplied" title="Who Replied" version_string="1.5.0a" version_id="1050001" url="http://xenforo.com/community/resources/who-replied.1537/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -42,8 +42,8 @@ step=5</edit_format_params>
   <route_prefixes/>
   <style_properties/>
   <templates>
-    <template title="whoreplied.css" version_id="1050000" version_string="1.5.0"><![CDATA[.xenOverlay .whoreplied {
-	background-color: rgb(255, 255, 255);
+    <template title="whoreplied.css" version_id="1050001" version_string="1.5.0a"><![CDATA[.xenOverlay .whoreplied {
+	background-color: {xen:property contentBackground};
 }
 
 .xenOverlay .whoreplied .pageNavLinkGroup {
@@ -54,7 +54,7 @@ step=5</edit_format_params>
 .whoreplied_postcount {
     font-size: 30px;
 }]]></template>
-    <template title="whoreplied_list" version_id="1050000" version_string="1.5.0"><![CDATA[<xen:title>{xen:helper threadPrefix, $thread, escaped}{$thread.title} - {xen:phrase whoreplied_members_who_replied}{xen:helper pagenumber, $page}</xen:title>
+    <template title="whoreplied_list" version_id="1050001" version_string="1.5.0a"><![CDATA[<xen:title>{xen:helper threadPrefix, $thread, escaped}{$thread.title} - {xen:phrase whoreplied_members_who_replied}{xen:helper pagenumber, $page}</xen:title>
 <xen:h1>{xen:phrase whoreplied_members_who_replied}</xen:h1>
 
 <xen:container var="$head.noindex">
@@ -68,7 +68,6 @@ step=5</edit_format_params>
 </xen:navigation>
 
 <xen:require css="whoreplied.css" />
-<xen:require js="js/whoreplied/whoreplied.js" />
 
 <div class="whoreplied section">
 	<xen:if hascontent="true">
@@ -103,13 +102,17 @@ step=5</edit_format_params>
 </div>
 
 <script>
-if ($('.whoreplied').parents('.xenOverlay').length) {
-  $('.whoreplied .pageNavLinkGroup a').each(function() {
-    $(this).data('cacheoverlay', true);
-  });
+!function($, window, document, _undefined)
+{
+    if ($('.whoreplied').parents('.xenOverlay').length) {
+      $('.whoreplied .pageNavLinkGroup a').each(function() {
+        $(this).data('cacheoverlay', true);
+      });
 
-  XenForo.register('.whoreplied .pageNavLinkGroup a', 'XenForo.OverlayTrigger');
+      XenForo.register('.whoreplied .pageNavLinkGroup a', 'XenForo.OverlayTrigger');
+    }
 }
+(jQuery, this, document);
 </script>]]></template>
   </templates>
   <public_template_modifications>
