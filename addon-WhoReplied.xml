@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="WhoReplied" title="Who Replied" version_string="1.4.2" version_id="1040200" url="http://xenforo.com/community/resources/who-replied.1537/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="WhoReplied" title="Who Replied" version_string="1.5.0" version_id="1050000" url="http://xenforo.com/community/resources/who-replied.1537/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -12,7 +12,16 @@
   <cron/>
   <email_templates/>
   <email_template_modifications/>
-  <optiongroups/>
+  <optiongroups>
+    <group group_id="WhoReplied" display_order="1000" debug_only="0"/>
+    <option option_id="WhoReplied_usersPerPage" edit_format="spinbox" data_type="positive_integer" can_backup="1">
+      <default_value>50</default_value>
+      <edit_format_params>min=1
+step=5</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="WhoReplied" display_order="10"/>
+    </option>
+  </optiongroups>
   <permissions>
     <permission_groups/>
     <permissions>
@@ -21,6 +30,10 @@
     <interface_groups/>
   </permissions>
   <phrases>
+    <phrase title="option_group_WhoReplied" version_id="1050000" version_string="1.5.0"><![CDATA[Who Replied]]></phrase>
+    <phrase title="option_group_WhoReplied_description" version_id="1050000" version_string="1.5.0"><![CDATA[Options for the Who Replied add-on.]]></phrase>
+    <phrase title="option_WhoReplied_usersPerPage" version_id="1050000" version_string="1.5.0"><![CDATA[Users Per Page]]></phrase>
+    <phrase title="option_WhoReplied_usersPerPage_explain" version_id="1050000" version_string="1.5.0"><![CDATA[The number of users to display on each page.]]></phrase>
     <phrase title="permission_forum_whoRepliedView" version_id="3" version_string="1.1.0"><![CDATA[View Who Replied]]></phrase>
     <phrase title="whoreplied_members_who_replied" version_id="1" version_string="1.0.0"><![CDATA[Members Who Replied this thread]]></phrase>
     <phrase title="whoreplied_see_posts" version_id="3" version_string="1.1.0"><![CDATA[See all posts from this user in this thread]]></phrase>
@@ -29,10 +42,19 @@
   <route_prefixes/>
   <style_properties/>
   <templates>
-    <template title="whoreplied.css" version_id="1" version_string="1.0.0"><![CDATA[.whoreplied_postcount {
+    <template title="whoreplied.css" version_id="1050000" version_string="1.5.0"><![CDATA[.xenOverlay .whoreplied {
+	background-color: rgb(255, 255, 255);
+}
+
+.xenOverlay .whoreplied .pageNavLinkGroup {
+	margin-left: 4px;
+	margin-right: 4px;
+}
+
+.whoreplied_postcount {
     font-size: 30px;
 }]]></template>
-    <template title="whoreplied_list" version_id="5" version_string="1.3.0"><![CDATA[<xen:title>{xen:helper threadPrefix, $thread, escaped}{$thread.title} - {xen:phrase whoreplied_members_who_replied}</xen:title>
+    <template title="whoreplied_list" version_id="1050000" version_string="1.5.0"><![CDATA[<xen:title>{xen:helper threadPrefix, $thread, escaped}{$thread.title} - {xen:phrase whoreplied_members_who_replied}{xen:helper pagenumber, $page}</xen:title>
 <xen:h1>{xen:phrase whoreplied_members_who_replied}</xen:h1>
 
 <xen:container var="$head.noindex">
@@ -46,9 +68,17 @@
 </xen:navigation>
 
 <xen:require css="whoreplied.css" />
+<xen:require js="js/whoreplied/whoreplied.js" />
 
-<div class="section">
+<div class="whoreplied section">
+	<xen:if hascontent="true">
+	<div class="pageNavLinkGroup">
+		<xen:contentcheck><xen:pagenav link="threads/whoreplied" linkdata="{$thread}" page="{$page}" perpage="{$usersPerPage}" total="{$totalUsers}" /></xen:contentcheck>
+	</div>
+	</xen:if>
+	
 	<dl class="subHeading pairsInline"><dt>{xen:phrase thread}:</dt> <dd><a href="{xen:link threads, $thread}">{xen:helper threadPrefix, $thread}{$thread.title}</a></dd></dl>
+
 	<ol class="overlayScroll">
         <xen:foreach loop="$users" value="$user">
 		<xen:include template="member_list_item">
@@ -62,8 +92,25 @@
         </xen:include>
         </xen:foreach>
 	</ol>
+	
+	<xen:if hascontent="true">
+	<div class="pageNavLinkGroup">
+		<xen:contentcheck><xen:pagenav link="threads/whoreplied" linkdata="{$thread}" page="{$page}" perpage="{$usersPerPage}" total="{$totalUsers}" /></xen:contentcheck>
+	</div>
+	</xen:if>
+	
 	<div class="sectionFooter overlayOnly"><a class="button primary OverlayCloser">{xen:phrase close}</a></div>
-</div>]]></template>
+</div>
+
+<script>
+if ($('.whoreplied').parents('.xenOverlay').length) {
+  $('.whoreplied .pageNavLinkGroup a').each(function() {
+    $(this).data('cacheoverlay', true);
+  });
+
+  XenForo.register('.whoreplied .pageNavLinkGroup a', 'XenForo.OverlayTrigger');
+}
+</script>]]></template>
   </templates>
   <public_template_modifications>
     <modification template="thread_list_item" modification_key="WhoReplied_thread_list_item" description="" execution_order="10" enabled="1" action="str_replace">
@@ -72,7 +119,7 @@
 &ndash;
 <xen:else />
 <xen:if is="{$visitor.permissions.forum.whoRepliedView} and {$thread.reply_count} > 0">
-<a href="{xen:link threads/whoreplied, $thread}" title="{xen:phrase whoreplied_whoreplied}" class='OverlayTrigger' data-href="{xen:link threads/whoreplied, $thread}">{xen:number $thread.reply_count}</a>
+<a href="{xen:link threads/whoreplied, $thread}" title="{xen:phrase whoreplied_whoreplied}" class="OverlayTrigger" data-cacheOverlay="true">{xen:number $thread.reply_count}</a>
 <xen:else />
 {$thread.reply_count}
 </xen:if>
@@ -82,7 +129,7 @@
       <find><![CDATA[#(\s*?)(<xen:hook name="thread_view_tools_links")#i]]></find>
       <replace><![CDATA[$1
 <xen:if is="{$visitor.permissions.forum.whoRepliedView} and {$thread.reply_count} > 0">
-    <a href="{xen:link threads/whoreplied, $thread}" title="{xen:phrase whoreplied_whoreplied}" class='OverlayTrigger' data-href="{xen:link threads/whoreplied, $thread}">{xen:phrase whoreplied_whoreplied}</a>
+    <a href="{xen:link threads/whoreplied, $thread}" title="{xen:phrase whoreplied_whoreplied}" class="OverlayTrigger" data-cacheOverlay="true">{xen:phrase whoreplied_whoreplied}</a>
 </xen:if>
 $1$2]]></replace>
     </modification>

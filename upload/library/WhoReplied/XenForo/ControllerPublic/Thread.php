@@ -14,12 +14,31 @@ class WhoReplied_XenForo_ControllerPublic_Thread extends XFCP_WhoReplied_XenForo
             return $this->responseNoPermission();
         }
 
-        $users = $this->_getWhoRepliedModel()->getUserAndCountPosts($thread);
+        $whoRepliedModel = $this->_getWhoRepliedModel();
+
+        $page = max(1, $this->_input->filterSingle('page', XenForo_Input::UINT));
+        $usersPerPage = XenForo_Application::getOptions()->WhoReplied_usersPerPage;
+        $totalUsers = $whoRepliedModel->countUsers($thread['thread_id']);
+
+        $this->canonicalizePageNumber($page, $usersPerPage, $totalUsers, 'threads/whoreplied', $thread);
+        $this->canonicalizeRequestUrl(
+            XenForo_Link::buildPublicLink( 'threads/whoreplied', $thread, array('page' => $page))
+        );
+
+        $fetchOptions = array(
+            'perPage' => $usersPerPage,
+            'page' => $page
+        );
+
+        $users = $whoRepliedModel->getUsersAndCountPosts($thread, $fetchOptions);
 
         $viewParams = array(
             'users' => $users,
             'thread' => $thread,
             'forum' => $forum,
+            'page' => $page,
+            'usersPerPage' => $usersPerPage,
+            'totalUsers' => $totalUsers
         );
 
         return $this->responseView('WhoReplied_ViewPublic_Thread_WhoReplied', 'whoreplied_list', $viewParams);
