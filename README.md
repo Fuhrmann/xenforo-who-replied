@@ -36,31 +36,4 @@ If you want to customize the number of posts of each number you can add this to 
 
 (this will decrease the font-size, but you can customize any way you want)
 
-## 1.3.1
-- Performance Update
-
-## 1.3.0b
-- Put overlay support back in.
-
-## 1.3.0a
-- Put permission support back in.
-- Add forum to the breadcrumb.
-
-## 1.3.0
-- Migrated from template hooks and post processing to Template Modification System. Catches watched threads, new posts views for free.
-- Fixed links back to thread from the Who Replied Page.
-
-## 1.2.0
-- Added a new permission under the Forum Permission Group: "View Who Replied:", this permission works per forum node
-- Make use of Event Hints on Code Event listener to increase performance
-- Changed template post render "find_new_threads" to "find_new_posts"
-
-## 1.1.0
-- Added a link to show all the posts from a user within the thread
-- Added the same behavior of the forum thread list to the 'What's new' section
-
-## 1.0.1
-- Fixed regex problem with arabic characters
-
-## 1.0.0
-- Released
+All releases can be found in this link: https://github.com/Fuhrmann/xenforo-who-replied/releases
