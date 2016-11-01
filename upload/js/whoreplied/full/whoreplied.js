@@ -5,8 +5,6 @@
  * that was distributed with this source code.
  */
 
-"use strict";
-
 /**
  * Create the WhoReplied namespace, if it does not already exist.
  */
@@ -27,16 +25,15 @@ var WhoReplied = WhoReplied || {};
   {
     WhoReplied.XenForoPageNav.call(this, $pageNav);
 
-    // TODO: is there a better local element available?
-    if (this.api.getItemWrap().parents('.xenOverlay').length) {
-      $('.pageNavLinkGroup a:not(.PageNavPrev,.PageNavNext)').each(
+    if ($pageNav.parents('.xenOverlay').length) {
+      $pageNav.find('a:not(.PageNavPrev,.PageNavNext)').each(
         function() {
           $(this).addClass('OverlayTrigger');
           $(this).data('cacheoverlay', 'true');
         }
       );
 
-      this.api.getItemWrap().closest('nav').xfActivate();
+      $pageNav.children('nav').xfActivate();
     }
   };
 
