@@ -54,7 +54,7 @@ step=5</edit_format_params>
 .whoreplied_postcount {
     font-size: 30px;
 }]]></template>
-    <template title="whoreplied_list" version_id="1050100" version_string="1.5.1"><![CDATA[<xen:title>{xen:helper threadPrefix, $thread, escaped}{$thread.title} - {xen:phrase whoreplied_members_who_replied}{xen:helper pagenumber, $page}</xen:title>
+    <template title="whoreplied_list" version_id="1050300" version_string="1.5.3"><![CDATA[<xen:title>{xen:helper threadPrefix, $thread, escaped}{$thread.title} - {xen:phrase whoreplied_members_who_replied}{xen:helper pagenumber, $page}</xen:title>
 <xen:h1>{xen:phrase whoreplied_members_who_replied}</xen:h1>
 
 <xen:container var="$head.noindex">
@@ -82,6 +82,14 @@ step=5</edit_format_params>
 	<ol class="overlayScroll">
         <xen:foreach loop="$users" value="$user">
 		<xen:include template="member_list_item">
+		<xen:set var="$guestHtml">{xen:phrase unknown_member}</xen:set>
+		<xen:set var="$contentTemplate">
+			<xen:if is="{$user.canStartConversation}">
+				<a href="{xen:link 'conversations/add', '', 'to={$user.username}'}">
+				{xen:phrase start_conversation}
+				</a>
+			</xen:if>
+		</xen:set>
         	<xen:set var="$extraTemplate">
         		<div class="whoreplied_postcount">        			
                                 <a href="{xen:link 'search/search', '', 'users={$user.username}', 'type=post', 'thread_id={$thread.thread_id}', 'o=date'}" target="_blank" title="{xen:phrase whoreplied_see_posts}">

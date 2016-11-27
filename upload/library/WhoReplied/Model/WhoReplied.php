@@ -27,16 +27,16 @@ class WhoReplied_Model_WhoReplied extends XenForo_Model
      *
      * @return array
      */
-    public function getUsersAndCountPosts(array $thread, array $fetchOptions = array())
+    public function getUsersAndCountPosts(array $thread, array $fetchOptions = array(), array $viewingUser = null)
     {
+        $this->standardizeViewingUserReference($viewingUser);
         $limitOptions = $this->prepareLimitFetchOptions($fetchOptions);
 
         $users = $this->fetchAllKeyed($this->limitQueryResults(
-            'SELECT post_count, user.*
-                FROM xf_thread_user_post posts
-                JOIN xf_user user ON user.user_id = posts.user_id
-                WHERE posts.thread_id = ?
-                ORDER BY post_count DESC',
+            'SELECT *
+             FROM xf_thread_user_post posts
+             WHERE posts.thread_id = ?
+             ORDER BY post_count DESC',
             $limitOptions['limit'],
             $limitOptions['offset']
         ), 'user_id', array($thread['thread_id']));
@@ -46,7 +46,43 @@ class WhoReplied_Model_WhoReplied extends XenForo_Model
         {
             $users[$thread['user_id']]['post_count'] = $users[$thread['user_id']]['post_count'] - 1;
         }
+
+        $posterIds = array_keys($users);
+
+        $userModel = $this->_getUserModel();
+
+        $posters = $userModel->getUsersByIds($posterIds, array(
+            'join' => XenForo_Model_User::FETCH_USER_PRIVACY,
+            'followingUserId' => $viewingUser['user_id']
+        ));
+
+        if (!empty($posters))
+        {
+            foreach ($users as $userId => &$user)
+            {
+                if (isset($posters[$user['user_id']]))
+                {
+                    $postCount = $user['post_count'];
+                    $user = $posters[$user['user_id']];
+                    $user['post_count'] = $postCount;
+                    $user['canStartConversation'] = $userModel->canStartConversationWithUser($user, $null, $viewingUser);
+                }
+                else
+                {
+                    unset($users[$userId]);
+                }
+            }
+        }
+
         return $users;
+    }
+
+    /**
+     * @return XenForo_Model_User
+     */
+    protected function _getUserModel()
+    {
+        return $this->getModelFromCache('XenForo_Model_User');
     }
 }
 
