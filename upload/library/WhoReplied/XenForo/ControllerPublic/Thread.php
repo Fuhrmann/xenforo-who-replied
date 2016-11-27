@@ -14,6 +14,7 @@ class WhoReplied_XenForo_ControllerPublic_Thread extends XFCP_WhoReplied_XenForo
             return $this->responseNoPermission();
         }
 
+        $visitor = XenForo_Visitor::getInstance();
         $whoRepliedModel = $this->_getWhoRepliedModel();
 
         $page = max(1, $this->_input->filterSingle('page', XenForo_Input::UINT));
@@ -33,6 +34,7 @@ class WhoReplied_XenForo_ControllerPublic_Thread extends XFCP_WhoReplied_XenForo
         $users = $whoRepliedModel->getUsersAndCountPosts($thread, $fetchOptions);
 
         $viewParams = array(
+            'canSearch' => $visitor->canSearch(),
             'users' => $users,
             'thread' => $thread,
             'forum' => $forum,
