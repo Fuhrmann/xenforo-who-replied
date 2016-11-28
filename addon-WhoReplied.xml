@@ -93,7 +93,7 @@ step=5</edit_format_params>
         	<xen:set var="$extraTemplate">
         		<div class="whoreplied_postcount">
                                 <xen:if is="{$canSearch}">
-                                <a href="{xen:link 'search/search', '', 'users={$user.username}', 'type=post', 'thread_id={$thread.thread_id}', 'o=date'}" target="_blank" title="{xen:phrase whoreplied_see_posts}">
+                                <a href="{xen:link 'search/search', '', 'users={$user.username}', 'type=post', 'thread_id={$thread.thread_id}', 'order=date'}" target="_blank" title="{xen:phrase whoreplied_see_posts}">
                                     {$user.post_count}
                                 </a>
                                 <xen:else />
