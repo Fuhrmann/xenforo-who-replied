@@ -36,7 +36,7 @@ class WhoReplied_Model_WhoReplied extends XenForo_Model
             'SELECT *
              FROM xf_thread_user_post posts
              WHERE posts.thread_id = ?
-             ORDER BY post_count DESC',
+             ORDER BY post_count DESC, user_id',
             $limitOptions['limit'],
             $limitOptions['offset']
         ), 'user_id', array($thread['thread_id']));
