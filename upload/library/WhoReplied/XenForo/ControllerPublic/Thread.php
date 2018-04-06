@@ -22,6 +22,7 @@ class WhoReplied_XenForo_ControllerPublic_Thread extends XFCP_WhoReplied_XenForo
             $filterView = false;
         }
 
+        /** @var XenForo_ControllerHelper_ForumThreadPost $ftpHelper */
         $ftpHelper = $this->getHelper('ForumThreadPost');
         list($thread, $forum) = $ftpHelper->assertThreadValidAndViewable($threadId);
 
@@ -64,7 +65,7 @@ class WhoReplied_XenForo_ControllerPublic_Thread extends XFCP_WhoReplied_XenForo
     }
 
     /**
-     * @return WhoReplied_Model_WhoReplied
+     * @return WhoReplied_Model_WhoReplied|XenForo_Model
      */
     protected function _getWhoRepliedModel()
     {
@@ -72,7 +73,7 @@ class WhoReplied_XenForo_ControllerPublic_Thread extends XFCP_WhoReplied_XenForo
     }
 
     /**
-     * @return XenForo_ControllerHelper_UserCriteria
+     * @return XenForo_ControllerHelper_Abstract|XenForo_ControllerHelper_UserCriteria
      */
     protected function _getCriteriaHelper()
     {

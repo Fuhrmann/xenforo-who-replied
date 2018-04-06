@@ -6,10 +6,10 @@ class WhoReplied_Model_WhoReplied extends XenForo_Model
      * Count the number of users who replied to a thread.
      *
      * @param int $threadId The ID of the thread to count
-     *
+     * @param     $conditions
      * @return int The number of users who replied to the thread
      */
-    public function countUsers($threadId, $conditions)
+    public function countUsers($threadId, array $conditions)
     {
         $whereClause = $this->prepareUserConditions($conditions);
 
@@ -27,12 +27,13 @@ class WhoReplied_Model_WhoReplied extends XenForo_Model
     /**
      * Get all users from a specific threads and count their posts.
      *
-     * @param array $thread       Thread data
-     * @param array $fetchOptions User fetch options
-     *
+     * @param array      $thread       Thread data
+     * @param array      $fetchOptions User fetch options
+     * @param array      $conditions
+     * @param array|null $viewingUser
      * @return array
      */
-    public function getUsersAndCountPosts(array $thread, array $fetchOptions = array(), $conditions, array $viewingUser = null)
+    public function getUsersAndCountPosts(array $thread, array $fetchOptions = array(), array $conditions, array $viewingUser = null)
     {
         $this->standardizeViewingUserReference($viewingUser);
         $limitOptions = $this->prepareLimitFetchOptions($fetchOptions);
@@ -86,7 +87,7 @@ class WhoReplied_Model_WhoReplied extends XenForo_Model
     }
 
     /**
-     * @return XenForo_Model_User
+     * @return XenForo_Model|XenForo_Model_User
      */
     protected function _getUserModel()
     {

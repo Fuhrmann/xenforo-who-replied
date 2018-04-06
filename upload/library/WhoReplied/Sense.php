@@ -1,0 +1,3 @@
+<?php
+
+class XFCP_WhoReplied_XenForo_ControllerPublic_Thread extends XenForo_ControllerPublic_Thread {}
