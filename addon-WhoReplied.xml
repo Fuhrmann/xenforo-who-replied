@@ -116,7 +116,11 @@ step=5</edit_format_params>
 <xen:require js="js/xenforo/filter_list.js" />
 
 <xen:require css="whoreplied.css" />
+<xen:if is="{$debugMode}">
+<xen:require js="js/whoreplied/full/whoreplied.js" />
+<xen:else/>
 <xen:require js="js/whoreplied/whoreplied.js" />
+</xen:if>
 
 <div class="whoreplied section">
 
