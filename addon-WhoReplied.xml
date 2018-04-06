@@ -113,7 +113,7 @@ step=5</edit_format_params>
     <xen:breadcrumb href="{xen:link full:threads, $thread}">{xen:helper threadPrefix, $thread}{$thread.title}</xen:breadcrumb>
 </xen:navigation>
 
-<xen:require js="js/xenforo/full/filter_list.js" />
+<xen:require js="js/xenforo/filter_list.js" />
 
 <xen:require css="whoreplied.css" />
 <xen:require js="js/whoreplied/whoreplied.js" />
