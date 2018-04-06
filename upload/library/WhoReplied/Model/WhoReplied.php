@@ -9,12 +9,17 @@ class WhoReplied_Model_WhoReplied extends XenForo_Model
      *
      * @return int The number of users who replied to the thread
      */
-    public function countUsers($threadId)
+    public function countUsers($threadId, $conditions)
     {
+        $whereClause = $this->prepareUserConditions($conditions);
+
         return $this->_getDb()->fetchOne(
-            'SELECT COUNT(*)
-                FROM xf_thread_user_post
-                WHERE xf_thread_user_post.thread_id = ?',
+            "SELECT COUNT(*)
+                FROM xf_thread_user_post as tup
+                LEFT JOIN xf_user as `user` ON user.user_id=tup.user_id
+                WHERE tup.thread_id = ?
+                AND $whereClause
+            ",
             $threadId
         );
     }
@@ -27,16 +32,19 @@ class WhoReplied_Model_WhoReplied extends XenForo_Model
      *
      * @return array
      */
-    public function getUsersAndCountPosts(array $thread, array $fetchOptions = array(), array $viewingUser = null)
+    public function getUsersAndCountPosts(array $thread, array $fetchOptions = array(), $conditions, array $viewingUser = null)
     {
         $this->standardizeViewingUserReference($viewingUser);
         $limitOptions = $this->prepareLimitFetchOptions($fetchOptions);
+        $whereClause = $this->prepareUserConditions($conditions);
 
         $users = $this->fetchAllKeyed($this->limitQueryResults(
-            'SELECT *
+            "SELECT *
              FROM xf_thread_user_post posts
+             LEFT JOIN xf_user as `user` ON user.user_id=posts.user_id
              WHERE posts.thread_id = ?
-             ORDER BY post_count DESC, user_id',
+             AND $whereClause
+             ORDER BY posts.post_count DESC, posts.user_id",
             $limitOptions['limit'],
             $limitOptions['offset']
         ), 'user_id', array($thread['thread_id']));
@@ -83,6 +91,25 @@ class WhoReplied_Model_WhoReplied extends XenForo_Model
     protected function _getUserModel()
     {
         return $this->getModelFromCache('XenForo_Model_User');
+    }
+
+    private function prepareUserConditions($conditions)
+    {
+        $db = $this->_getDb();
+        $sqlConditions = array();
+
+        if (!empty($conditions['username2']))
+        {
+            if (is_array($conditions['username2']))
+            {
+                $sqlConditions[] = 'user.username LIKE ' . XenForo_Db::quoteLike($conditions['username2'][0], $conditions['username2'][1], $db);
+            }
+            else
+            {
+                $sqlConditions[] = 'user.username LIKE ' . XenForo_Db::quoteLike($conditions['username2'], 'lr', $db);
+            }
+        }
+        return $this->getConditionsForClause($sqlConditions);
     }
 }
 

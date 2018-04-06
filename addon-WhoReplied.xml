@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="WhoReplied" title="Who Replied" version_string="1.5.4" version_id="1050400" url="https://xenforo.com/community/resources/who-replied.1537/" install_callback_class="WhoReplied_Installer" install_callback_method="install" uninstall_callback_class="WhoReplied_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="WhoReplied" title="Who Replied" version_string="1.6.0" version_id="1060000" url="https://xenforo.com/community/resources/who-replied.1537/" install_callback_class="WhoReplied_Installer" install_callback_method="install" uninstall_callback_class="WhoReplied_Installer" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -42,77 +42,165 @@ step=5</edit_format_params>
   <route_prefixes/>
   <style_properties/>
   <templates>
-    <template title="whoreplied.css" version_id="1050001" version_string="1.5.0a"><![CDATA[.xenOverlay .whoreplied {
-	background-color: {xen:property contentBackground};
+    <template title="whoreplied.css" version_id="1050400" version_string="1.5.4"><![CDATA[.xenOverlay .whoreplied {
+    background-color: {xen:property contentBackground};
 }
 
 .xenOverlay .whoreplied .pageNavLinkGroup {
-	margin-left: 4px;
-	margin-right: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
 }
 
 .whoreplied_postcount {
     font-size: 30px;
+}
+
+.threadTitle {
+    float: left;
+    font-size: 12px;
+}
+
+/* Filter related */
+.subHeading .FilterControls
+{
+    float: right;
+    margin-top: -3px;
+    max-height: 22px;
+    overflow: hidden;
+}
+
+.FilterControls .textCtrl
+{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-size: 11px;
+    height: 13px;
+    box-sizing: content-box;
+}
+
+.FilterControls .button
+{
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 19px;
+    line-height: 19px;
+    font-size: 11px;
+}
+
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+#noResults
+{
+    margin: 5px 10px;
 }]]></template>
-    <template title="whoreplied_list" version_id="1050300" version_string="1.5.3"><![CDATA[<xen:title>{xen:helper threadPrefix, $thread, escaped}{$thread.title} - {xen:phrase whoreplied_members_who_replied}{xen:helper pagenumber, $page}</xen:title>
+    <template title="whoreplied_list" version_id="1060000" version_string="1.6.0"><![CDATA[<xen:title>{xen:helper threadPrefix, $thread, escaped}{$thread.title} - {xen:phrase whoreplied_members_who_replied}{xen:helper pagenumber, $page}</xen:title>
 <xen:h1>{xen:phrase whoreplied_members_who_replied}</xen:h1>
 
 <xen:container var="$head.noindex">
-	<meta name="robots" content="noindex" />
+    <meta name="robots" content="noindex" />
 </xen:container>
 
 <xen:navigation>
-	<xen:breadcrumb source="$nodeBreadCrumbs" />
-	<xen:breadcrumb href="{xen:link full:forums, $forum}">{$forum.title}</xen:breadcrumb>
-	<xen:breadcrumb href="{xen:link full:threads, $thread}">{xen:helper threadPrefix, $thread}{$thread.title}</xen:breadcrumb>
+    <xen:breadcrumb source="$nodeBreadCrumbs" />
+    <xen:breadcrumb href="{xen:link full:forums, $forum}">{$forum.title}</xen:breadcrumb>
+    <xen:breadcrumb href="{xen:link full:threads, $thread}">{xen:helper threadPrefix, $thread}{$thread.title}</xen:breadcrumb>
 </xen:navigation>
+
+<xen:require js="js/xenforo/full/filter_list.js" />
 
 <xen:require css="whoreplied.css" />
 <xen:require js="js/whoreplied/whoreplied.js" />
 
 <div class="whoreplied section">
-	<xen:if hascontent="true">
-	<div class="pageNavLinkGroup">
-		<xen:contentcheck><xen:pagenav link="threads/whoreplied" linkdata="{$thread}" page="{$page}" perpage="{$usersPerPage}" total="{$totalUsers}" /></xen:contentcheck>
-	</div>
-	</xen:if>
-	
-	<dl class="subHeading pairsInline"><dt>{xen:phrase thread}:</dt> <dd><a href="{xen:link threads, $thread}">{xen:helper threadPrefix, $thread}{$thread.title}</a></dd></dl>
 
-	<ol class="overlayScroll">
-        <xen:foreach loop="$users" value="$user">
-		<xen:include template="member_list_item">
-		<xen:set var="$guestHtml">{xen:phrase unknown_member}</xen:set>
-		<xen:set var="$contentTemplate">
-			<xen:if is="{$user.canStartConversation}">
-				<a href="{xen:link 'conversations/add', '', 'to={$user.username}'}">
-				{xen:phrase start_conversation}
-				</a>
-			</xen:if>
-		</xen:set>
-        	<xen:set var="$extraTemplate">
-        		<div class="whoreplied_postcount">
-                                <xen:if is="{$canSearch}">
-                                <a href="{xen:link 'search/search', '', 'users={$user.username}', 'type=post', 'thread_id={$thread.thread_id}', 'order=date'}" target="_blank" title="{xen:phrase whoreplied_see_posts}">
-                                    {$user.post_count}
-                                </a>
-                                <xen:else />
-                                    {$user.post_count}
-                                </xen:if>
-    			</div>
-    		</xen:set>
-        </xen:include>
-        </xen:foreach>
-	</ol>
-	
-	<xen:if hascontent="true">
-	<div class="pageNavLinkGroup">
-		<xen:contentcheck><xen:pagenav link="threads/whoreplied" linkdata="{$thread}" page="{$page}" perpage="{$usersPerPage}" total="{$totalUsers}" /></xen:contentcheck>
-	</div>
-	</xen:if>
-	
-	<div class="sectionFooter overlayOnly"><a class="button primary OverlayCloser">{xen:phrase close}</a></div>
+    <xen:comment>Wrap it in a form to connect filter_list.js</xen:comment>
+    <form action="{xen:link 'threads/whoreplied', $thread}" method="post">
+
+        <xen:if hascontent="true">
+            <div class="pageNavLinkGroup">
+                <xen:contentcheck>
+                    <xen:pagenav link="threads/whoreplied" linkdata="{$thread}" page="{$page}" perpage="{$usersPerPage}" total="{$totalUsers}" />
+                </xen:contentcheck>
+            </div>
+        </xen:if>
+
+        <div class="subHeading">
+            <dl class="threadTitle pairsInline">
+                <dt>{xen:phrase thread}:</dt>
+                <dd><a href="{xen:link threads, $thread}">{xen:helper threadPrefix, $thread}{$thread.title}</a></dd>
+            </dl>
+
+            <div class="clearfix">
+                <div class="FilterControls">
+                    <input name="filter" class="textCtrl" value="{$filterParams.filter}" type="search" placeholder="{xen:if '{$placeholder}', $placeholder, {xen:phrase filter_items}}" />
+
+                    <label class="prefixCtrl">
+                        <input type="checkbox" name="prefixmatch" value="1"{xen:checked {$filterParams.prefixmatch}} />
+                        {xen:phrase prefix_match}
+                    </label>
+
+                    <input type="button" name="clearfilter" value="{xen:phrase clear}" title="{xen:phrase clear_filter_parameters}" class="button" />
+                </div>
+            </div>
+
+        </div>
+
+
+        <ol class="overlayScroll FilterList" data-ajaxfilter="true">
+            <xen:include template="whoreplied_list_items"/>
+        </ol>
+
+        <xen:if hascontent="true">
+            <div class="pageNavLinkGroup">
+                <xen:contentcheck><xen:pagenav link="threads/whoreplied" linkdata="{$thread}" page="{$page}" perpage="{$usersPerPage}" total="{$totalUsers}" /></xen:contentcheck>
+            </div>
+        </xen:if>
+
+        <p class="sectionFooter">
+            {xen:phrase showing_x_of_y_items, 'count=<span class="FilterListCount">{xen:count $users}</span>', 'total={xen:number $totalUsers}'}
+        </p>
+
+        <div class="sectionFooter overlayOnly"><a class="button primary OverlayCloser">{xen:phrase close}</a></div>
+
+    </form>
+
 </div>]]></template>
+    <template title="whoreplied_list_items" version_id="1050400" version_string="1.5.4"><![CDATA[<xen:foreach loop="$users" value="$user">
+    <xen:include template="member_list_item">
+        <xen:set var="$id">_{$user.user_id}</xen:set>
+        <xen:set var="$extraClasses">listItem</xen:set>
+        <xen:set var="$guestHtml">{xen:phrase unknown_member}</xen:set>
+        <xen:set var="$contentTemplate">
+            <xen:if is="{$user.canStartConversation}">
+                <a href="{xen:link 'conversations/add', '', 'to={$user.username}'}">
+                    {xen:phrase start_conversation}
+                </a>
+            </xen:if>
+        </xen:set>
+        <xen:set var="$extraTemplate">
+            <div class="whoreplied_postcount">
+                <xen:if is="{$canSearch}">
+                    <a href="{xen:link 'search/search', '', 'users={$user.username}', 'type=post', 'thread_id={$thread.thread_id}', 'order=date'}" target="_blank" title="{xen:phrase whoreplied_see_posts}">
+                        {$user.post_count}
+                    </a>
+                    <xen:else />
+                    {$user.post_count}
+                </xen:if>
+            </div>
+            <xen:comment>Used by filter</xen:comment>
+            <div style="display: none;">
+                <h4><em>{$user.username}</em></h4>
+            </div>
+        </xen:set>
+    </xen:include>
+</xen:foreach>]]></template>
   </templates>
   <public_template_modifications>
     <modification template="thread_list_item" modification_key="WhoReplied_thread_list_item" description="" execution_order="10" enabled="1" action="str_replace">
@@ -134,6 +222,10 @@ step=5</edit_format_params>
     <a href="{xen:link threads/whoreplied, $thread}" title="{xen:phrase whoreplied_whoreplied}" class="OverlayTrigger" data-cacheOverlay="true">{xen:phrase whoreplied_whoreplied}</a>
 </xen:if>
 $1$2]]></replace>
+    </modification>
+    <modification template="member_list_item" modification_key="whoreplied_member_list_item" description="Extra class to allow filter_list.js to grip list items" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[<li class="primaryContent memberListItem{]]></find>
+      <replace><![CDATA[<li class="primaryContent memberListItem {$extraClasses} {]]></replace>
     </modification>
   </public_template_modifications>
   <bb_code_media_sites/>

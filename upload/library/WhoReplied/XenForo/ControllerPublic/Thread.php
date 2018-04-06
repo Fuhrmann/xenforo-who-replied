@@ -7,6 +7,21 @@ class WhoReplied_XenForo_ControllerPublic_Thread extends XFCP_WhoReplied_XenForo
     {
         $threadId = $this->_input->filterSingle('thread_id', XenForo_Input::UINT);
 
+        // Filtering related
+        $criteria = $this->_input->filterSingle('criteria', XenForo_Input::JSON_ARRAY);
+        $criteria = $this->_filterUserSearchCriteria($criteria);
+
+        $filter = $this->_input->filterSingle('_filter', XenForo_Input::ARRAY_SIMPLE);
+        if ($filter && isset($filter['value']))
+        {
+            $criteria['username2'] = array($filter['value'], empty($filter['prefix']) ? 'lr' : 'r');
+            $filterView = true;
+        }
+        else
+        {
+            $filterView = false;
+        }
+
         $ftpHelper = $this->getHelper('ForumThreadPost');
         list($thread, $forum) = $ftpHelper->assertThreadValidAndViewable($threadId);
 
@@ -19,7 +34,8 @@ class WhoReplied_XenForo_ControllerPublic_Thread extends XFCP_WhoReplied_XenForo
 
         $page = max(1, $this->_input->filterSingle('page', XenForo_Input::UINT));
         $usersPerPage = XenForo_Application::getOptions()->WhoReplied_usersPerPage;
-        $totalUsers = $whoRepliedModel->countUsers($thread['thread_id']);
+        $criteriaPrepared = $this->_prepareUserSearchCriteria($criteria);
+        $totalUsers = $whoRepliedModel->countUsers($thread['thread_id'], $criteriaPrepared);
 
         $this->canonicalizePageNumber($page, $usersPerPage, $totalUsers, 'threads/whoreplied', $thread);
         $this->canonicalizeRequestUrl(
@@ -31,7 +47,7 @@ class WhoReplied_XenForo_ControllerPublic_Thread extends XFCP_WhoReplied_XenForo
             'page' => $page
         );
 
-        $users = $whoRepliedModel->getUsersAndCountPosts($thread, $fetchOptions);
+        $users = $whoRepliedModel->getUsersAndCountPosts($thread, $fetchOptions, $criteriaPrepared);
 
         $viewParams = array(
             'canSearch' => $visitor->canSearch(),
@@ -40,7 +56,8 @@ class WhoReplied_XenForo_ControllerPublic_Thread extends XFCP_WhoReplied_XenForo
             'forum' => $forum,
             'page' => $page,
             'usersPerPage' => $usersPerPage,
-            'totalUsers' => $totalUsers
+            'totalUsers' => $totalUsers,
+            'filterView' => $filterView
         );
 
         return $this->responseView('WhoReplied_ViewPublic_Thread_WhoReplied', 'whoreplied_list', $viewParams);
@@ -54,4 +71,21 @@ class WhoReplied_XenForo_ControllerPublic_Thread extends XFCP_WhoReplied_XenForo
         return $this->getModelFromCache('WhoReplied_Model_WhoReplied');
     }
 
+    /**
+     * @return XenForo_ControllerHelper_UserCriteria
+     */
+    protected function _getCriteriaHelper()
+    {
+        return $this->getHelper('UserCriteria');
+    }
+
+    protected function _filterUserSearchCriteria(array $criteria)
+    {
+        return $this->_getCriteriaHelper()->filterUserSearchCriteria($criteria);
+    }
+
+    protected function _prepareUserSearchCriteria(array $criteria)
+    {
+        return $this->_getCriteriaHelper()->prepareUserSearchCriteria($criteria);
+    }
 }

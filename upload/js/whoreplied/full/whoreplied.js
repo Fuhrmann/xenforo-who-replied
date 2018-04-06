@@ -78,5 +78,51 @@ var WhoReplied = WhoReplied || {};
    * Override core XenForo.PageNav with patched version.
    */
   XenForo.PageNav = WhoReplied.PageNav;
+
+  /**
+   * Override filter_list.js functions
+   */
+  XenForo.FilterList.prototype.filterAjax = function(ajaxData)
+  {
+    if (XenForo.hasResponseError(ajaxData))
+    {
+      return;
+    }
+
+    var $children = $(ajaxData.templateHtml).find('li.memberListItem');
+
+    this.$groups.hide();
+    this.$listItems.hide();
+    if (this.lookUpUrl)
+    {
+      $('.PageNav').hide();
+    }
+
+    this.removeAjaxResults();
+
+    if (!$children.length)
+    {
+      this.$listCounter.text(0);
+      this.showHideNoResults(true);
+    }
+    else
+    {
+      this.$ajaxResults = $children;
+
+      this.showHideNoResults(false);
+      this.$list.append($children);
+      $children.xfActivate();
+
+      var $items = $children.filter('.listItem').add($children.find('.listItem')), items = [];
+      $items.each(function(i, el) {
+        items[i] = new XenForo.FilterListItem($(el));
+      });
+      this.applyFilter(items);
+      this.$listCounter.text($items.length);
+    }
+
+    this.handleLast();
+
+  }
 }
 (jQuery, this, document);
