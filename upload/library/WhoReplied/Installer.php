@@ -26,13 +26,13 @@ class WhoReplied_Installer
             XenForo_Model::create("XenForo_Model_User");
 
             $db->query("insert ignore into xf_permission_entry_content (content_type, content_id, user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-                select distinct content_type, content_id, " . XenForo_Model_User::$defaultRegisteredGroupId . ", 0, convert(permission_group_id using utf8), 'viewReportPost', permission_value, permission_value_int
+                select distinct content_type, content_id, " . XenForo_Model_User::$defaultRegisteredGroupId . ", 0, convert(permission_group_id using utf8), 'whoRepliedView', permission_value, permission_value_int
                 from xf_permission_entry_content
                 where permission_group_id = 'forum' and permission_id in ('viewContent')
             ");
 
             $db->query("insert ignore into xf_permission_entry (user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-                select distinct " . XenForo_Model_User::$defaultRegisteredGroupId . ", 0, convert(permission_group_id using utf8), 'viewReportPost', permission_value, permission_value_int
+                select distinct " . XenForo_Model_User::$defaultRegisteredGroupId . ", 0, convert(permission_group_id using utf8), 'whoRepliedView', permission_value, permission_value_int
                 from xf_permission_entry
                 where permission_group_id = 'forum' and permission_id in ('viewContent')
             ");
