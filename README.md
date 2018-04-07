@@ -1,6 +1,8 @@
 # [Who Replied](http://xenforo.com/community/resources/who-replied.1537/)  <img align="left" src="logo.png" width="40" height="40" />
 
-This is an addon for the forum software [XenForo](http://www.xenforo.com). Compatible versions: 1.3, 1.4
+This is an addon for the forum software [XenForo](http://www.xenforo.com). Compatible versions: 1.3, 1.4.
+
+**If you are using XenForo 2, checkout the [compatible version here](https://xenforo.com/community/resources/who-replied.6340), developed by [Xon](https://github.com/Xon).**
 
 It will add a link to the replies number on the thread list template:
 
